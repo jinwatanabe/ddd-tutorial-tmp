@@ -5,6 +5,8 @@ import {
   type InMemoryBookRecord,
 } from "./infrastructure/InMemoryBookRepository.js";
 import { RegisterBookApplicationService } from "./application/RegisterBookApplicationService.js";
+import { BorrowBookApplicationService } from "./application/BorrowBookApplicationService.js";
+import { InMemoryFindUserRepository } from "./infrastructure/InMemoryFindUserRepository.js";
 
 const books: InMemoryBookRecord[] = [
   {
@@ -22,3 +24,9 @@ export const findAllBooksApplicationService =
 
 export const registerBookApplicationService =
   new RegisterBookApplicationService(bookRepository, createBookRepository);
+
+const findUserRepository = new InMemoryFindUserRepository();
+export const borrowBookApplicationService = new BorrowBookApplicationService(
+  findUserRepository,
+  bookRepository,
+);

@@ -1,6 +1,7 @@
 import { serve } from "@hono/node-server";
 import { Hono } from "hono";
 import {
+  borrowBookApplicationService,
   findAllBooksApplicationService,
   registerBookApplicationService,
 } from "./container.js";
@@ -25,6 +26,19 @@ app.post("/books", async (c) => {
 
   const newBook = await registerBookApplicationService.execute(title, isbn);
   return c.json(newBook);
+});
+
+app.post("/users/:userId/borrow", async (c) => {
+  const { userId } = c.req.param();
+  const { bookId } = await c.req.json<{ bookId: number }>();
+
+  const borrowBook = await borrowBookApplicationService.execute(
+    Number(userId),
+    bookId,
+  );
+  return c.json({
+    message: `${borrowBook.userName}が${borrowBook.bookTitle}を借りました`,
+  });
 });
 
 serve(
